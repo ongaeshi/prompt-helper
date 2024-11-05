@@ -1,30 +1,84 @@
-<script setup>
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
-  <div>
-    <a href="https://vite.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
+  <div class="chatgpt-assist-app container">
+    <!-- 目的選択セレクトボックス -->
+    <div class="field">
+      <label class="label" for="purpose">目的:</label>
+      <div class="control">
+        <div class="select is-fullwidth">
+          <select v-model="selectedPurpose" id="purpose">
+            <option v-for="option in purposes" :key="option" :value="option">{{ option }}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- 入力欄 -->
+    <div class="field">
+      <label class="label" for="inputText">入力:</label>
+      <div class="control">
+        <textarea class="textarea" v-model="inputText" id="inputText" rows="4"></textarea>
+      </div>
+    </div>
+
+    <!-- 投稿ボタン -->
+    <div class="field">
+      <div class="control">
+        <button class="button is-primary is-fullwidth" @click="submitInput">投稿</button>
+      </div>
+    </div>
+
+    <!-- 履歴＆出力エリア -->
+    <div class="output-area">
+      <h3 class="title is-5">履歴</h3>
+      <ul>
+        <li v-for="(entry, index) in history.slice().reverse()" :key="index" class="box">
+          {{ entry.text }}
+          <button class="button is-small is-link is-outlined" @click="copyToClipboard(entry.text)">
+            <i class="fas fa-copy"></i>
+          </button>
+        </li>
+      </ul>
+    </div>
   </div>
-  <HelloWorld msg="Vite + Vue" />
 </template>
 
+<script>
+export default {
+  data() {
+    return {
+      purposes: ["目的1", "目的2", "目的3"], // 目的リスト
+      selectedPurpose: "",
+      inputText: "",
+      history: []
+    };
+  },
+  methods: {
+    submitInput() {
+      if (this.inputText.trim()) {
+        this.history.push({ text: this.inputText });
+        this.inputText = "";
+      }
+    },
+    copyToClipboard(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        alert("コピーしました！");
+      });
+    }
+  }
+};
+</script>
+
 <style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+@import "https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css";
+@import "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css";
+
+.chatgpt-assist-app {
+  max-width: 600px;
+  margin: 0 auto;
+  padding-top: 20px;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+
+.output-area {
+  margin-top: 20px;
 }
 </style>
