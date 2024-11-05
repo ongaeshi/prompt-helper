@@ -1,5 +1,7 @@
 <template>
   <div class="chatgpt-assist-app container">
+    <h1 class="title">プロンプトヘルパー</h1>
+
     <!-- 目的選択セレクトボックス -->
     <div class="field">
       <label class="label" for="purpose">目的:</label>
